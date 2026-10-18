@@ -4,7 +4,7 @@
 Ours = build 0.1.4 run M1v8KzXxrMMEQAprU (2 GB) + build 0.1.5 run OClpKckmw6o6QzpFF for getemoji/MDN (those 2 were lost to the old watchdog bug in 0.1.4).
 apify/screenshot-url = run MjQoe0cK5DOmOn0GX (png, viewportWidth 1440, scrollToBottom; I aborted it at 41 min for budget after 29/30 URLs).
 cheapapi/website-screenshot-api = run j23KS5AEjJrQQJuOc (fullPage, desktop_1440, jpeg q85).
-Heights for every capture: [`heights.json`](heights.json). URL list: [`sites30.txt`](sites30.txt). One side-by-side example: [`getemoji-compare.jpg`](getemoji-compare.jpg). The full set of 30 side-by-side sheets (12 MB of third-party page images) is kept out of this repo; open an issue if you want it.
+Heights for every capture: [`heights.json`](heights.json). URL list: [`sites30.txt`](sites30.txt). Side-by-side examples: [`getemoji-compare.jpg`](getemoji-compare.jpg) (emoji fonts, consent pop-up) and [`vercel-compare.jpg`](vercel-compare.jpg) (100vh layout: ours complete, apify repeats the fixed hero over the footer, cheapapi's lower half is blank). The full set of 30 side-by-side sheets (12 MB of third-party page images) is kept out of this repo; open an issue if you want it.
 Verdict basis: ✅ complete and visually correct; ◐ captured but with a visible defect; ❌ wrong, truncated or blocked. Rows marked (h) were judged on captured height vs. true page height only (no visual inspection); the others were inspected visually.
 
 | # | URL | Ours | apify/screenshot-url | cheapapi |
