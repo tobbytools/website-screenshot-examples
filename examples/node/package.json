@@ -1,0 +1,7 @@
+{
+  "name": "website-screenshot-examples-node",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "dependencies": { "apify-client": "^2.9.0" }
+}

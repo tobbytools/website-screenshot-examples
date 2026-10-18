@@ -1,0 +1,24 @@
+# Copy to .github/workflows/visual-monitor.yml in your repo.
+# Add a repository secret named APIFY_TOKEN (Settings -> Secrets and variables -> Actions).
+# Runs every Monday and fails the job when a watched page changed visually.
+name: Visual monitor
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install apify-client
+      - name: Capture and compare
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: |
+          curl -sSLO https://raw.githubusercontent.com/tobbytools/website-screenshot-examples/main/examples/python/visual_monitor.py
+          python visual_monitor.py --name my-site https://example.com https://example.com/pricing

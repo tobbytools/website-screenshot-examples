@@ -1,0 +1,157 @@
+{
+  "name": "Weekly visual change alert (Apify Website Screenshot)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "name": "Every Monday 9:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "s1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/tobbyb~website-screenshot/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"urls\": [\"https://example.com\", \"https://example.org\"],\n  \"devices\": [\"desktop\"],\n  \"formats\": [\"jpeg\"],\n  \"changeDetectionName\": \"n8n-weekly\",\n  \"changeThresholdPercent\": \"1\"\n}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "name": "Apify: Website Screenshot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        0
+      ],
+      "id": "s2",
+      "notes": "Header Auth credential: name 'Authorization', value 'Bearer <your Apify API token>'. $0.004 per screenshot delivered; failed URLs are free."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.change && $json.change.changed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Changed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        520,
+        0
+      ],
+      "id": "s3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "m1",
+              "name": "message",
+              "value": "={{ $json.url }} changed {{ $json.change.diffPercent }}% since {{ $json.change.previousCapturedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "m2",
+              "name": "screenshot",
+              "value": "={{ $json.screenshotUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "m3",
+              "name": "diff",
+              "value": "={{ $json.change.diffImageUrl }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Build alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        780,
+        -100
+      ],
+      "id": "s4",
+      "notes": "Connect to Slack, Discord, Email or Telegram."
+    }
+  ],
+  "connections": {
+    "Every Monday 9:00": {
+      "main": [
+        [
+          {
+            "node": "Apify: Website Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify: Website Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Changed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changed?": {
+      "main": [
+        [
+          {
+            "node": "Build alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

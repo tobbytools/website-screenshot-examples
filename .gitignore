@@ -1,0 +1,7 @@
+node_modules/
+screenshots/
+screenshots.json
+.env
+*.env
+__pycache__/
+.venv/
